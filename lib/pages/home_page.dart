@@ -42,7 +42,8 @@ class _HomePageState extends State<HomePage> {
               hintStyle: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.greenAccent.shade200,
+                // ignore: deprecated_member_use
+                color: Colors.grey.withOpacity(0.5),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -70,9 +71,24 @@ class _HomePageState extends State<HomePage> {
                 backgroundColor: WidgetStatePropertyAll(Colors.green),
               ),
               onPressed: () async {
+                if (_taskController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Task Field cannot be Empty!"),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                  return;
+                }
                 await TaskService().addTask(_taskController.text);
                 _taskController.clear();
                 if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Task Added Successfully!"),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
                   Navigator.of(context).pop();
                 }
               },
@@ -132,13 +148,30 @@ class _HomePageState extends State<HomePage> {
                     backgroundColor: WidgetStatePropertyAll(Colors.green),
                   ),
                   onPressed: () async {
+                    if (_taskController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Task Field cannot be Empty!"),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
+                      Navigator.of(context).pop();
+                      return;
+                    }
                     task.name = _taskController.text;
                     task.updatedAt = DateTime.now();
                     task.isUpdated = true;
 
                     await TaskService().updateTask(task);
                     _taskController.clear();
+
                     if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Task Updated Successfully!"),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
                       Navigator.of(context).pop();
                     }
                   },
@@ -218,6 +251,14 @@ class _HomePageState extends State<HomePage> {
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.white,
+                          spreadRadius: 1,
+                          blurRadius: 2,
+                          offset: Offset(1, 1),
+                        ),
+                      ],
                     ),
                     child: ListTile(
                       onTap: () {
@@ -248,6 +289,12 @@ class _HomePageState extends State<HomePage> {
                       trailing: IconButton(
                         onPressed: () async {
                           TaskService().deleteTask(task.id);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Task Deleted Successfully!"),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
                         },
                         icon: Icon(Icons.delete, size: 40, color: Colors.red),
                       ),

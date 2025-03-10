@@ -28,6 +28,7 @@ class TaskService {
       //Update the Task with Generated Id
       await docRef.update({"id": docRef.id});
       debugPrint("Task Added with ID: ${docRef.id}");
+      
     } catch (error) {
       debugPrint("Error Adding Task: $error");
     }
