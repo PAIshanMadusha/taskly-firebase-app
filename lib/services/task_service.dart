@@ -23,15 +23,18 @@ class TaskService {
       final Map<String, dynamic> data = task.toJson();
 
       //Add the Task to the Collection
-      await _taskCollection.add(data);
+      final DocumentReference docRef = await _taskCollection.add(data);
 
-      debugPrint("Task Added");
+      //Update the Task with Generated Id
+      await docRef.update({"id": docRef.id});
+      debugPrint("Task Added with ID: ${docRef.id}");
+      
     } catch (error) {
       debugPrint("Error Adding Task: $error");
     }
   }
 
-  //Get all the Task from the Firestore Collection
+  //Get all the Tasks from the Firestore Collection
   Stream<List<TaskModel>> getTask() {
     return _taskCollection.snapshots().map(
       (snapshot) =>
@@ -44,5 +47,15 @@ class TaskService {
               )
               .toList(),
     );
+  }
+
+  //Delete a Task from the Firestore Collection
+  Future<void> deleteTask(String id) async {
+    try {
+      await _taskCollection.doc(id).delete();
+      debugPrint("Task Deleted");
+    } catch (error) {
+      debugPrint("Error Deleting a Task: $error");
+    }
   }
 }

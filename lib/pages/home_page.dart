@@ -36,21 +36,21 @@ class _HomePageState extends State<HomePage> {
             style: TextStyle(color: Colors.black87),
             controller: _taskController,
             decoration: InputDecoration(
-              fillColor: Colors.blueAccent.shade100,
+              fillColor: Colors.greenAccent.shade100,
               filled: true,
               hintText: "Enter Here",
               hintStyle: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.blueAccent.shade200,
+                color: Colors.greenAccent.shade200,
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: Colors.blueAccent, width: 1),
+                borderSide: BorderSide(color: Colors.greenAccent, width: 1),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide(color: Colors.blueAccent, width: 2),
+                borderSide: BorderSide(color: Colors.greenAccent, width: 2),
               ),
             ),
           ),
@@ -62,8 +62,8 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              label: Text("Cancel"),
-              icon: Icon(Icons.cancel),
+              label: Text("Cancel", style: TextStyle(color: Colors.white)),
+              icon: Icon(Icons.cancel, color: Colors.white),
             ),
             ElevatedButton.icon(
               style: ButtonStyle(
@@ -75,8 +75,8 @@ class _HomePageState extends State<HomePage> {
                 // ignore: use_build_context_synchronously
                 Navigator.of(context).pop();
               },
-              label: Text("Save"),
-              icon: Icon(Icons.task),
+              label: Text("Save", style: TextStyle(color: Colors.white)),
+              icon: Icon(Icons.task, color: Colors.white),
             ),
           ],
         );
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(Icons.task, size: 55, color: Colors.green,),
+        leading: Icon(Icons.task, size: 55, color: Colors.green),
         title: Text(
           "Taskly Firebase App",
           style: TextStyle(
@@ -139,7 +139,10 @@ class _HomePageState extends State<HomePage> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       gradient: LinearGradient(
-                        colors: [const Color.fromARGB(255, 180, 255, 170), const Color.fromARGB(255, 251, 255, 188)],
+                        colors: [
+                          const Color.fromARGB(255, 180, 255, 170),
+                          const Color.fromARGB(255, 251, 255, 188),
+                        ],
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ),
@@ -156,9 +159,7 @@ class _HomePageState extends State<HomePage> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            height: 5,
-                          ),
+                          SizedBox(height: 5),
                           Text(
                             "Created: ${task.createdAt}",
                             style: TextStyle(fontSize: 18, color: Colors.blue),
@@ -170,7 +171,9 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       trailing: IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          TaskService().deleteTask(task.id);
+                        },
                         icon: Icon(Icons.delete, size: 40, color: Colors.red),
                       ),
                     ),
