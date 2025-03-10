@@ -26,9 +26,23 @@ class TaskService {
       await _taskCollection.add(data);
 
       debugPrint("Task Added");
-
     } catch (error) {
       debugPrint("Error Adding Task: $error");
     }
+  }
+
+  //Get all the Task from the Firestore Collection
+  Stream<List<TaskModel>> getTask() {
+    return _taskCollection.snapshots().map(
+      (snapshot) =>
+          snapshot.docs
+              .map(
+                (doc) => TaskModel.formJson(
+                  doc.data() as Map<String, dynamic>,
+                  doc.id,
+                ),
+              )
+              .toList(),
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:taskly_firebase_app/models/task_model.dart';
 import 'package:taskly_firebase_app/services/task_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -86,8 +87,102 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: Icon(Icons.task, size: 55, color: Colors.green,),
+        title: Text(
+          "Taskly Firebase App",
+          style: TextStyle(
+            fontSize: 40,
+            fontWeight: FontWeight.bold,
+            color: Colors.green,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: StreamBuilder(
+          stream: TaskService().getTask(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator(color: Colors.blueAccent);
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  "Error Loading Tasks!",
+                  style: TextStyle(
+                    color: Colors.blueGrey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              );
+            } else if (snapshot.data!.isEmpty) {
+              return Center(
+                child: Text(
+                  "Not Task Available!, Add Some Tasks",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueGrey,
+                  ),
+                ),
+              );
+            } else {
+              final List<TaskModel> tasks = snapshot.data!;
+              return ListView.builder(
+                itemCount: tasks.length,
+                itemBuilder: (context, index) {
+                  final TaskModel task = tasks[index];
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: LinearGradient(
+                        colors: [const Color.fromARGB(255, 180, 255, 170), const Color.fromARGB(255, 251, 255, 188)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                    ),
+                    child: ListTile(
+                      title: Text(
+                        task.name,
+                        style: TextStyle(
+                          fontSize: 34,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "Created: ${task.createdAt}",
+                            style: TextStyle(fontSize: 18, color: Colors.blue),
+                          ),
+                          Text(
+                            "Updated: ${task.updatedAt}",
+                            style: TextStyle(fontSize: 18, color: Colors.blue),
+                          ),
+                        ],
+                      ),
+                      trailing: IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.delete, size: 40, color: Colors.red),
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
+          },
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.green,
         onPressed: _showAddTaskDialog,
         child: Icon(Icons.add, size: 35, color: Colors.white),
       ),
