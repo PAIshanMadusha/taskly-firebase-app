@@ -72,13 +72,85 @@ class _HomePageState extends State<HomePage> {
               onPressed: () async {
                 await TaskService().addTask(_taskController.text);
                 _taskController.clear();
-                // ignore: use_build_context_synchronously
-                Navigator.of(context).pop();
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
               },
               label: Text("Save", style: TextStyle(color: Colors.white)),
               icon: Icon(Icons.task, color: Colors.white),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  //Open a Bottom Sheet for Edit Task
+  void _editTaskBottomSheet(TaskModel task) {
+    _taskController.text = task.name;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.all(12),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: Column(
+              children: [
+                TextField(
+                  style: TextStyle(color: Colors.black87),
+                  controller: _taskController,
+                  decoration: InputDecoration(
+                    fillColor: Colors.greenAccent.shade100,
+                    filled: true,
+                    hintText: "Enter Here",
+                    hintStyle: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.greenAccent.shade200,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        color: Colors.greenAccent,
+                        width: 1,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                      borderSide: BorderSide(
+                        color: Colors.greenAccent,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 12),
+                ElevatedButton.icon(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Colors.green),
+                  ),
+                  onPressed: () async {
+                    task.name = _taskController.text;
+                    task.updatedAt = DateTime.now();
+                    task.isUpdated = true;
+
+                    await TaskService().updateTask(task);
+                    _taskController.clear();
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  label: Text(
+                    "Update Task",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  icon: Icon(Icons.update, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -148,6 +220,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     child: ListTile(
+                      onTap: () {
+                        _editTaskBottomSheet(task);
+                      },
                       title: Text(
                         task.name,
                         style: TextStyle(

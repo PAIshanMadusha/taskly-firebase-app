@@ -28,7 +28,6 @@ class TaskService {
       //Update the Task with Generated Id
       await docRef.update({"id": docRef.id});
       debugPrint("Task Added with ID: ${docRef.id}");
-      
     } catch (error) {
       debugPrint("Error Adding Task: $error");
     }
@@ -47,6 +46,18 @@ class TaskService {
               )
               .toList(),
     );
+  }
+
+  //Update a Task in the Firestore Collection
+  Future<void> updateTask(TaskModel task) async {
+    try {
+      final Map<String, dynamic> data = task.toJson();
+
+      await _taskCollection.doc(task.id).update(data);
+      debugPrint("Updated Successfully!");
+    } catch (error) {
+      debugPrint("Error Updating Task: $error");
+    }
   }
 
   //Delete a Task from the Firestore Collection
