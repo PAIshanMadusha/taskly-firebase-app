@@ -32,7 +32,13 @@ Taskly is a simple task management app built using Flutter and Firebase Firestor
 
 3. **Set up Firebase**
 
-   To use Firebase services in this project, follow these steps:
+## 🔥Struggling to Connect Firebase to Flutter?
+
+- 📖I’ve written a detailed [Medium](https://medium.com/@ishanmadusha) article explaining the step-by-step process to connect Firebase to Flutter with screenshots.
+
+- 📖**Read my blog on Medium here:** [Link](https://medium.com/@ishanmadusha/how-to-connect-firebase-manually-to-a-flutter-android-project-without-errors-7a2c2a8e2741)
+
+### To use Firebase services in this project, follow these steps:
 
    **Step 1: Create a Firebase Project**
 
@@ -64,7 +70,7 @@ Taskly is a simple task management app built using Flutter and Firebase Firestor
    - Click **Create Database** and select test mode (for development).
    - Set up Firestore rules to allow read/write access (modify for production later).
 
-4. **Run the app**
+5. **Run the app**
 
    ```bash
    flutter run
